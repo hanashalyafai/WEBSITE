@@ -1,0 +1,256 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="homeautomationModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="appliances">
+          <Key>
+            <PropertyRef Name="ApplianceID" />
+          </Key>
+          <Property Name="ApplianceID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="subID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" />
+          <Property Name="state" Type="bit" Nullable="false" />
+          <Property Name="pin" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="emails">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="phoneNumber" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="message" Type="ntext" Nullable="false" />
+        </EntityType>
+        <EntityType Name="house">
+          <Key>
+            <PropertyRef Name="HouseID" />
+          </Key>
+          <Property Name="Title" Type="nvarchar" MaxLength="50" />
+          <Property Name="HouseID" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="list">
+          <Key>
+            <PropertyRef Name="ListID" />
+          </Key>
+          <Property Name="time" Type="datetime" Nullable="false" />
+          <Property Name="pin" Type="int" Nullable="false" />
+          <Property Name="state" Type="bit" Nullable="false" />
+          <Property Name="description" Type="nvarchar" MaxLength="50" />
+          <Property Name="ListID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="settings">
+          <Key>
+            <PropertyRef Name="index" />
+          </Key>
+          <Property Name="name" Type="nvarchar(max)" />
+          <Property Name="value" Type="nvarchar(max)" />
+          <Property Name="index" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="users">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="username" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="password" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_appliances_house">
+          <End Role="house" Type="Self.house" Multiplicity="1" />
+          <End Role="appliances" Type="Self.appliances" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="house">
+              <PropertyRef Name="HouseID" />
+            </Principal>
+            <Dependent Role="appliances">
+              <PropertyRef Name="subID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="homeautomationModelStoreContainer">
+          <EntitySet Name="appliances" EntityType="Self.appliances" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="emails" EntityType="Self.emails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="house" EntityType="Self.house" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="list" EntityType="Self.list" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="settings" EntityType="Self.settings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="users" EntityType="Self.users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_appliances_house" Association="Self.FK_appliances_house">
+            <End Role="house" EntitySet="house" />
+            <End Role="appliances" EntitySet="appliances" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="homeautomationModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="appliances">
+          <Key>
+            <PropertyRef Name="ApplianceID" />
+          </Key>
+          <Property Name="ApplianceID" Type="Guid" Nullable="false" />
+          <Property Name="subID" Type="Guid" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="state" Type="Boolean" Nullable="false" />
+          <Property Name="pin" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="house" Relationship="Self.FK_appliances_house" FromRole="appliances" ToRole="house" />
+        </EntityType>
+        <EntityType Name="house">
+          <Key>
+            <PropertyRef Name="HouseID" />
+          </Key>
+          <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="HouseID" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="appliances" Relationship="Self.FK_appliances_house" FromRole="house" ToRole="appliances" />
+        </EntityType>
+        <EntityType Name="list">
+          <Key>
+            <PropertyRef Name="ListID" />
+          </Key>
+          <Property Name="time" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="pin" Type="Int32" Nullable="false" />
+          <Property Name="state" Type="Boolean" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ListID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <Association Name="FK_appliances_house">
+          <End Role="house" Type="Self.house" Multiplicity="1" />
+          <End Role="appliances" Type="Self.appliances" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="house">
+              <PropertyRef Name="HouseID" />
+            </Principal>
+            <Dependent Role="appliances">
+              <PropertyRef Name="subID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="homeautomationDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="appliances" EntityType="Self.appliances" />
+          <EntitySet Name="house" EntityType="Self.house" />
+          <EntitySet Name="list" EntityType="Self.list" />
+          <AssociationSet Name="FK_appliances_house" Association="Self.FK_appliances_house">
+            <End Role="house" EntitySet="house" />
+            <End Role="appliances" EntitySet="appliances" />
+          </AssociationSet>
+          <EntitySet Name="settings" EntityType="homeautomationModel.settings" />
+          <EntitySet Name="emails" EntityType="homeautomationModel.emails" />
+          <EntitySet Name="users" EntityType="homeautomationModel.users" />
+        </EntityContainer>
+        <EntityType Name="settings">
+          <Key>
+            <PropertyRef Name="index" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="value" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="index" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="emails">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="phoneNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="message" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="users">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="username" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="password" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="homeautomationModelStoreContainer" CdmEntityContainer="homeautomationDBEntities">
+          <EntitySetMapping Name="appliances">
+            <EntityTypeMapping TypeName="homeautomationModel.appliances">
+              <MappingFragment StoreEntitySet="appliances">
+                <ScalarProperty Name="ApplianceID" ColumnName="ApplianceID" />
+                <ScalarProperty Name="subID" ColumnName="subID" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="state" ColumnName="state" />
+                <ScalarProperty Name="pin" ColumnName="pin" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="house">
+            <EntityTypeMapping TypeName="homeautomationModel.house">
+              <MappingFragment StoreEntitySet="house">
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="HouseID" ColumnName="HouseID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="list">
+            <EntityTypeMapping TypeName="homeautomationModel.list">
+              <MappingFragment StoreEntitySet="list">
+                <ScalarProperty Name="time" ColumnName="time" />
+                <ScalarProperty Name="pin" ColumnName="pin" />
+                <ScalarProperty Name="state" ColumnName="state" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="ListID" ColumnName="ListID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="settings">
+            <EntityTypeMapping TypeName="homeautomationModel.settings">
+              <MappingFragment StoreEntitySet="settings">
+                <ScalarProperty Name="index" ColumnName="index" />
+                <ScalarProperty Name="value" ColumnName="value" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="emails">
+            <EntityTypeMapping TypeName="homeautomationModel.emails">
+              <MappingFragment StoreEntitySet="emails">
+                <ScalarProperty Name="message" ColumnName="message" />
+                <ScalarProperty Name="phoneNumber" ColumnName="phoneNumber" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="users">
+            <EntityTypeMapping TypeName="homeautomationModel.users">
+              <MappingFragment StoreEntitySet="users">
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
